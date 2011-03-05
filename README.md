@@ -1,5 +1,5 @@
 # Overview #
-`scalac` compiler plugin implementing the following [homework grading policy](http://www.cis.upenn.edu/~matuszek/cis700-2010/Assignments/02-Playfair.html):
+scala-grading is a `scalac` compiler plugin implementing the following [homework grading policy](http://www.cis.upenn.edu/~matuszek/cis700-2010/Assignments/02-Playfair.html):
 
 
 - You will gain 1 point for each function defined with def, up to a maximum of 10 points.
