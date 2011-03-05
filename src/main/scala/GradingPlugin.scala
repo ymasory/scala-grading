@@ -1,4 +1,4 @@
-package localhost
+package com.yuvimasory.scalagrading
 
 import scala.tools.nsc
 import nsc.Global
@@ -6,23 +6,25 @@ import nsc.Phase
 import nsc.plugins.Plugin
 import nsc.plugins.PluginComponent
 
-class DivByZero(val global: Global) extends Plugin {
+class ScalaGrading(val global: Global) extends Plugin {
   import global._
 
-  val name = "divbyzero"
-  val description = "checks for division by zero"
-  val components = List[PluginComponent](Component)
+  val name = "scala-grading"
+  val description = "grades functional style"
   
-  private object Component extends PluginComponent {
-    val global: DivByZero.this.global.type = DivByZero.this.global
+  val components = List[PluginComponent](ScalaGradingComponent)
+  
+  private object ScalaGradingComponent extends PluginComponent {
+    val global: ScalaGrading.this.global.type = ScalaGrading.this.global
     val runsAfter = List[String]("refchecks");
-    val phaseName = DivByZero.this.name
-    def newPhase(_prev: Phase) = new DivByZeroPhase(_prev)    
+    val phaseName = ScalaGrading.this.name
+    def newPhase(_prev: Phase) = new SGNullPhase(_prev)
     
-    class DivByZeroPhase(prev: Phase) extends StdPhase(prev) {
-      override def name = DivByZero.this.name
+    class SGNullPhase(prev: Phase) extends StdPhase(prev) {
+      override def name = ScalaGrading.this.name
       def apply(unit: CompilationUnit) {
-        for ( tree @ Apply(Select(rcvr, nme.DIV), List(Literal(Constant(0)))) <- unit.body;
+        for ( tree @ Apply(Select(rcvr, nme.DIV),
+                           List(Literal(Constant(0)))) <- unit.body;
              if rcvr.tpe <:< definitions.IntClass.tpe) 
           {
             unit.error(tree.pos, "definitely division by zero")
