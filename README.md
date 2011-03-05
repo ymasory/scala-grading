@@ -13,7 +13,7 @@
 2. `cd scala-grading`
 3. `sbt package`
 
-You know should have `target/scala_2.8.1/scala-grading-*.jar`.
+You should now have `target/scala_2.8.1/scala-grading-*.jar`.
 
 # Run #
     cd scala-grading
