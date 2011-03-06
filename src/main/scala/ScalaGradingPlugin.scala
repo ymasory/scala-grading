@@ -31,7 +31,7 @@ class ScalaGrading(val global: Global) extends Plugin {
         for (tree <- unit.body) {
           curScore = analyzeTree(tree, curScore)
         }
-        println("\n" + curScore)
+        println("\n" + curScore.report)
       }
     }
   }

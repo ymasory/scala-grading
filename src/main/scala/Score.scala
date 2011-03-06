@@ -24,7 +24,8 @@ case class Score (
   }
 
   val LF = "\n"
-  override val toString = {
+  val report  = {
+    LF +
     "DETAILS" + LF +
     "-------" + LF +
     "defs:       " + defs + LF +
@@ -34,9 +35,11 @@ case class Score (
     "whiles:     " + whiles + LF +
     "vars:       " + vars + LF +
     "nulls:      " + nulls + LF +
-    "arrays:     " + arrays + LF + LF +
+    "arrays:     " + arrays + LF +
+    LF +
     "SCORE" + LF +
-    "-----" + LF + score
+    "-----" + LF + score + LF +
+    LF
 
   }
 }
@@ -49,34 +52,39 @@ case object Score {
   val testPrefix = curDir + "/src/test/resources/"
 
   def parse(in: List[String]): Score = {
-    val curScore = EmptyScore
+    var curScore = EmptyScore
     for (line <- in) {
-      println(line.split("\\s"))
+      val els = line.split("\\s")
+      curScore = els(0) match {
+        case "defs"       => curScore.copy(defs = els.last.toInt)
+        case "lambdas"    => curScore.copy(lambdas = els.last.toInt)
+        case "matches"    => curScore.copy(matches = els.last.toInt)
+        case "deceptions" => curScore.copy(deceptions = els.last.toInt)
+        case "whiles"     => curScore.copy(whiles = els.last.toInt)
+        case "vars"       => curScore.copy(vars = els.last.toInt)
+        case "nulls"      => curScore.copy(nulls = els.last.toInt)
+        case "arrays"     => curScore.copy(arrays = els.last.toInt)
+        case _            => curScore
+      }
     }
     curScore
   }
 
   def runPlugin(fileName: String): Score = {
-    val cmd = "scala -Xplugin:" + pluginLoc + " " + testPrefix + fileName
-    println("cmd: " + cmd)
-    val (_, lines) = execp(cmd)
-
-    val curScore = Score.EmptyScore
-    for (line <- lines) {
-      println(line.split("\\s"))
-    }
-    curScore
+    val cmd = Array("scalac",
+                    "-Xplugin:" + pluginLoc,
+                    testPrefix + fileName)
+    val (res, lines) = execp(cmd)
+    parse(lines)
   }
 
   /** from scala-utilities, LGPL
     * http://code.google.com/p/scala-utilities/
     */
-  def execp (cmd : String) = {
+  def execp (cmd : Array[String]) = {
     import java.io._
-    var currDir : Option[File] = None
     val runTime = Runtime.getRuntime
-    val process = if (currDir.isDefined)
-      runTime.exec (cmd, null, currDir.get) else runTime.exec(cmd)
+    val process = runTime.exec(cmd)
     val resultBuffer = new BufferedReader(
       new InputStreamReader(process.getInputStream))
     var line : String = null
