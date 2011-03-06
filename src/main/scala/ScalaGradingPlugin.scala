@@ -9,8 +9,14 @@ import nsc.plugins.PluginComponent
 class ScalaGrading(val global: Global) extends Plugin {
   import global._
 
-  var bonusPoints = 0
-  var pointDeductions = 0
+  var numDefs = 0
+  var numLambdas = 0
+  var numMatches = 0
+  var numDeceptions = 0
+  var numWhiles = 0
+  var numVars = 0
+  var numArrays = 0
+  var numNulls = 0
 
   override val name = "scala-grading"
   override val description = "grades functional style"
@@ -19,10 +25,30 @@ class ScalaGrading(val global: Global) extends Plugin {
 
   val LF = "\n"
   def report = {
-    "FINAL REPORT" + LF +
-    "Bonus points: " + bonusPoints + LF +
-    "Deductions:   " + pointDeductions + LF +
-    "Total: " + (bonusPoints - pointDeductions) + LF
+    "DETAILS" + LF +
+    "-------" + LF +
+    "defs:       " + numDefs + LF +
+    "lambdas:    " + numLambdas + LF +
+    "matches:    " + numMatches + LF +
+    "deceptions: " + numDeceptions + LF +
+    "whiles:     " + numWhiles + LF +
+    "vars:       " + numVars + LF +
+    "nulls:      " + numNulls + LF +
+    "arrays:     " + numArrays + LF + LF +
+    "SCORE" + LF +
+    "-----" + LF + score
+  }
+
+  def score = {
+    import java.lang.Math.{min, max}
+    min(10, numDefs) +
+    min(20, numLambdas * 5) +
+    (if (numMatches > 0) 5 else 0) -
+    (numDeceptions * 15) -
+    (numWhiles * 3) -
+    (numVars * 3) -
+    (numArrays * 5) -
+    (numNulls * 10)
   }
   
   object ScalaGradingComponnet extends PluginComponent {
@@ -42,12 +68,12 @@ class ScalaGrading(val global: Global) extends Plugin {
             case DefDef(_, name, _, _, _, _) if (name.startsWith("<") == false)
               && (tree.symbol.isSourceMethod)  => {
                 info("function def, +1")
-                bonusPoints += 1
+                numDefs += 1
             }
 
             case Literal(Constant(null)) => {
               info("null literal, -10")
-              pointDeductions += 10
+              numNulls += 1
             }
 
             case _ =>
