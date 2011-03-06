@@ -38,29 +38,32 @@ class ScalaGrading(val global: Global) extends Plugin {
 
   def analyzeTree(tree: Tree, score: Score): Score = {
     def info(msg: String) = global.reporter.info(tree.pos, msg, true)
+    
+    if (tree.symbol == null || tree.symbol.isSynthetic) score
+    else {
+      tree match {
+      
+        //find defs
+        case DefDef(_, name, _, _, _, _) if (name.startsWith("<") == false)
+          && (tree.symbol.isSourceMethod) => {
+            info("function def")
+            score.copy(defs = score.defs + 1)
+        }
 
-    tree match {
+        //find _literal_ nulls
+        case Literal(Constant(null)) => {
+          info("null literal")
+          score.copy(nulls = score.nulls + 1)
+        }
 
-      //find defs
-      case DefDef(_, name, _, _, _, _) if (name.startsWith("<") == false)
-        && (tree.symbol.isSourceMethod)  => {
-          info("function def")
-          score.copy(defs = score.defs + 1)
+        //find vars
+        case ValDef(_, name, _, _) if (name.toString.contains("$") == false) => {
+          info("var")
+          score.copy(vars = score.vars + 1)
+        }
+
+        case _ => score
       }
-
-      //find _literal_ nulls
-      case Literal(Constant(null)) => {
-        info("null literal")
-        score.copy(nulls = score.nulls + 1)
-      }
-
-      //find vars
-      case ValDef(_, name, _, _) if (name.toString.contains("$") == false) => {
-        info("var")
-        score.copy(vars = score.vars + 1)
-      }
-
-      case _ => score
     }
   }
 }
