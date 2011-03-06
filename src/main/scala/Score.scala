@@ -75,11 +75,12 @@ case object Score {
                     "-Xplugin:" + pluginLoc,
                     testPrefix + fileName)
     val (stdout, stderr, ret) = call(cmd)
-    if (ret != 0) throw ScalacExitCodeException(ret: Int)
+    if (ret != 0) throw ScalacExitCodeException(ret, stderr.mkString(" "))
     parse(stdout)
   }
 
-  case class ScalacExitCodeException(code: Int) extends RuntimeException(code.toString)
+  case class ScalacExitCodeException(code: Int, stderr: String)
+       extends RuntimeException(code.toString + ": " + stderr)
 
   /** borrows from scala-utilities, LGPL
     * http://code.google.com/p/scala-utilities/
@@ -88,8 +89,10 @@ case object Score {
     import java.io._
     val runTime = Runtime.getRuntime
     val process = runTime.exec(cmd)
-    val stdoutBuffer = new BufferedReader(new InputStreamReader(process.getInputStream))
-    val stderrBuffer = new BufferedReader(new InputStreamReader(process.getErrorStream))
+    val stdoutBuffer = new BufferedReader(
+      new InputStreamReader(process.getInputStream))
+    val stderrBuffer = new BufferedReader(
+      new InputStreamReader(process.getErrorStream))
     
     def drainBuffer(buff: BufferedReader) = {
       var line : String = null

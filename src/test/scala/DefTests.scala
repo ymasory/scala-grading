@@ -13,7 +13,7 @@ class DefTests extends FunSuite {
                          vars=0,
                          arrays=0,
                          nulls=0)
-    expect(expected) {Score.runPlugin("FooDef.scala")}
+    expect(expected) {Score.runPlugin("defs/FooDef.scala")}
   }
 
   test("MainDef") {
@@ -25,6 +25,6 @@ class DefTests extends FunSuite {
                          vars=0,
                          arrays=0,
                          nulls=0)
-    expect(expected) {Score.runPlugin("MainDef.scala")}
+    expect(expected) {Score.runPlugin("defs/MainDef.scala")}
   }
 }

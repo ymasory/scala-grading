@@ -43,9 +43,9 @@ class ScalaGrading(val global: Global) extends Plugin {
     tree match {
       
       //find defs
-      case DefDef(_, name, _, _, _, _) if (name.startsWith("<") == false)
+      case tree @ DefDef(_, name, _, _, _, _) if (name.startsWith("<") == false)
         && (tree.symbol.isSourceMethod) => {
-          info("function def")
+          info("function def: " + tree.keyword)
           score.copy(defs = score.defs + 1)
       }
 
