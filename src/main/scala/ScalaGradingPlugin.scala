@@ -17,11 +17,12 @@ class ScalaGrading(val global: Global) extends Plugin {
   
   override val components = List(ScalaGradingComponnet)
 
+  val LF = "\n"
   def report = {
-    "FINAL REPORT\n" +
-    "Bonus points: " + bonusPoints + "\n" +
-    "Deductions:   " + pointDeductions + "\n" +
-    "Total: " + (bonusPoints - pointDeductions)
+    "FINAL REPORT" + LF +
+    "Bonus points: " + bonusPoints + LF +
+    "Deductions:   " + pointDeductions + LF +
+    "Total: " + (bonusPoints - pointDeductions) + LF
   }
   
   object ScalaGradingComponnet extends PluginComponent {
