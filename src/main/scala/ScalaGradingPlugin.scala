@@ -15,10 +15,7 @@ class ScalaGrading(val global: Global) extends Plugin {
   override val name = "scala-grading"
   override val description = "grades functional style"
   
-  override val components = List (
-    SGDefComponent,
-    SGNullComponent
-  )
+  override val components = List(ScalaGradingComponnet)
 
   def report = {
     "FINAL REPORT" +
@@ -27,42 +24,33 @@ class ScalaGrading(val global: Global) extends Plugin {
     "Total: " + (bonusPoints - pointDeductions)
   }
   
-
-  protected abstract class SGAbstractComponent extends PluginComponent {
+  object ScalaGradingComponnet extends PluginComponent {
     override val global: ScalaGrading.this.global.type = ScalaGrading.this.global
     override val runsAfter = List[String]("refchecks");
-    override val phaseName = getClass.getName.split("\\$").last
-  }
-
-  object SGNullComponent extends SGAbstractComponent {
-    override def newPhase(_prev: Phase) = new SGNullPhase(_prev)
+    override val phaseName = "scala-grading component"
+    override def newPhase(_prev: Phase) = new ScalaGradingPhase(_prev)
     
-    class SGNullPhase(prev: Phase) extends StdPhase(prev) {
+    class ScalaGradingPhase(prev: Phase) extends StdPhase(prev) {
+      override def name = "scala-grading phase"
       override def apply(unit: CompilationUnit) {
-        for (t @ Literal(Constant(null)) <- unit.body) {
-          global.reporter.info(t.pos, "null literal, -10", true)
-          pointDeductions += 10
+        for (tree <- unit.body) {
+          (tree: @unchecked) match {
+
+            case DefDef(_, name, _, _, _, _) if (name.startsWith("<") == false)
+              && (tree.symbol.isSourceMethod)  => {
+                global.reporter.info(tree.pos, "function def, +1", true)
+                bonusPoints += 1
+            }
+
+            case Literal(Constant(null)) => {
+              global.reporter.info(tree.pos, "null literal, -10", true)
+              pointDeductions += 10
+            }
+
+            case _ =>
+          }
         }
       }
     }
   }
-
-  object SGDefComponent extends SGAbstractComponent {
-    override def newPhase(_prev: Phase) = new SGDefPhase(_prev)
-    
-    class SGDefPhase(prev: Phase) extends StdPhase(prev) {
-      override def name = getClass.getName.split("\\$").last
-      override def apply(unit: CompilationUnit) {
-        for {t @ DefDef(_, name, _, _, _, _) <- unit.body
-             if name.startsWith("<") == false
-             if t.symbol.isSourceMethod
-           } {
-          global.reporter.info(t.pos, "function def, +1", true)
-          bonusPoints += 1
-        }
-      }
-    }
-  }
-
-
 }
