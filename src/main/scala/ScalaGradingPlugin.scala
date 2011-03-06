@@ -34,16 +34,18 @@ class ScalaGrading(val global: Global) extends Plugin {
       override def name = "scala-grading phase"
       override def apply(unit: CompilationUnit) {
         for (tree <- unit.body) {
+          def info(msg: String) = global.reporter.info(tree.pos, msg, true)
+
           (tree: @unchecked) match {
 
             case DefDef(_, name, _, _, _, _) if (name.startsWith("<") == false)
               && (tree.symbol.isSourceMethod)  => {
-                global.reporter.info(tree.pos, "function def, +1", true)
+                info("function def, +1")
                 bonusPoints += 1
             }
 
             case Literal(Constant(null)) => {
-              global.reporter.info(tree.pos, "null literal, -10", true)
+              info("null literal, -10")
               pointDeductions += 10
             }
 
