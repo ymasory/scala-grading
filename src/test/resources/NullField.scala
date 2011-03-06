@@ -1,3 +1,3 @@
 object NullField {
-  val five = null
+  val badField: String = null
 }
