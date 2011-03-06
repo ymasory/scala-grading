@@ -39,9 +39,9 @@ class ScalaGrading(val global: Global) extends Plugin {
     
     class SGNullPhase(prev: Phase) extends StdPhase(prev) {
       override def apply(unit: CompilationUnit) {
-        for (t @ DefDef(_, name, _, _, _, _) <- unit.body) {
-          global.reporter.info(t.pos, "null def " + name + ", +1", true)
-          bonusPoints += 1
+        for (t @ Literal(Constant(null)) <- unit.body) {
+          global.reporter.info(t.pos, "null literal, -10", true)
+          pointDeductions += 10
         }
       }
     }
@@ -54,8 +54,7 @@ class ScalaGrading(val global: Global) extends Plugin {
       override def name = getClass.getName.split("\\$").last
       override def apply(unit: CompilationUnit) {
         for (t @ DefDef(_, name, _, _, _, _) <- unit.body) {
-          global.reporter.info(t.pos, "null def " + name + ", +1", true)
-          bonusPoints += 1
+
         }
       }
     }
