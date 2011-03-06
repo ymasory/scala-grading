@@ -52,12 +52,12 @@ case object Score {
   val testPrefix = curDir + "/src/test/resources/"
 
   def parse(in: List[String]): Score = {
+    println("in: " + in)
     var curScore = EmptyScore
-    println(in)
     for (line <- in) {
       val els = line.split("\\s")
       curScore = els.head match {
-        case "defs:"       => curScore.copy(defs = els.last.toInt)
+        case "defs:"       => curScore.copy(defs = els.last.trim.toInt)
         case "lambdas:"    => curScore.copy(lambdas = els.last.toInt)
         case "matches:"    => curScore.copy(matches = els.last.toInt)
         case "deceptions:" => curScore.copy(deceptions = els.last.toInt)
