@@ -5,7 +5,14 @@ import org.scalatest.FunSuite
 class ScalaGradingTests extends FunSuite {
 
   test("one var") {
-    expect(Score(0, 0, 0, 0, 1, 0, 0, 0)) {
+    expect(Score(defs=0,
+                 lambdas=0,
+                 matches=0,
+                 deceptions=0,
+                 whiles=0,
+                 vars=1,
+                 nulls=0,
+                 arrays=0)) {
       Score.runPlugin("OneVar.scala")
     }
   }
