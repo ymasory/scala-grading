@@ -74,13 +74,13 @@ class ScalaGrading(val global: Global) extends Plugin {
             //find defs
             case DefDef(_, name, _, _, _, _) if (name.startsWith("<") == false)
               && (tree.symbol.isSourceMethod)  => {
-                info("function def, +1")
+                info("function def")
                 numDefs += 1
             }
 
             //find _literal_ nulls
             case Literal(Constant(null)) => {
-              info("null literal, -10")
+              info("null literal")
               numNulls += 1
             }
 
