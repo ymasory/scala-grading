@@ -18,8 +18,8 @@ class ScalaGrading(val global: Global) extends Plugin {
   override val components = List(ScalaGradingComponnet)
 
   def report = {
-    "FINAL REPORT" +
-    "Bonus points: " + bonusPoints +
+    "FINAL REPORT\n" +
+    "Bonus points: " + bonusPoints + "\n" +
     "Deductions:   " + pointDeductions + "\n" +
     "Total: " + (bonusPoints - pointDeductions)
   }
@@ -52,6 +52,8 @@ class ScalaGrading(val global: Global) extends Plugin {
             case _ =>
           }
         }
+
+        println("\n" + report)
       }
     }
   }
