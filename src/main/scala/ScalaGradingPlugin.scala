@@ -54,6 +54,12 @@ class ScalaGrading(val global: Global) extends Plugin {
         score.copy(nulls = score.nulls + 1)
       }
 
+      //find vars
+      case ValDef(_, name, _, _) if (name.toString.contains("$") == false) => {
+        info("var")
+        score.copy(vars = score.vars + 1)
+      }
+
       case _ => score
     }
   }
