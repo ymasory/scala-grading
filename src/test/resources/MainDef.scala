@@ -1,4 +1,3 @@
-object TwoDefs {
+object MainDef {
   def main(args: Array[String]) {}
-  def foo = "foo"
 }

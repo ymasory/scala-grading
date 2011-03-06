@@ -1,3 +1,3 @@
-object OneVar {
+object VarField {
   var s: String = "string"
 }

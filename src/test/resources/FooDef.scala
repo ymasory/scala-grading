@@ -1,0 +1,3 @@
+object FooDef {
+  def foo() = {}
+}
