@@ -52,7 +52,6 @@ case object Score {
   val testPrefix = curDir + "/src/test/resources/"
 
   def parse(in: List[String]): Score = {
-    println("in: " + in)
     var curScore = EmptyScore
     for (line <- in) {
       val els = line.split("\\s")
@@ -79,6 +78,8 @@ case object Score {
     parse(lines)
   }
 
+  case class ScalacExitCodeException(code: Int) extends RuntimeException(code.toString)
+
   /** from scala-utilities, LGPL
     * http://code.google.com/p/scala-utilities/
     */
@@ -101,7 +102,10 @@ case object Score {
 
     process.waitFor
     resultBuffer.close
+    
+    val ret = process.exitValue
+    if (ret != 0) throw ScalacExitCodeException(ret: Int)
 
-    (process.exitValue, lineList.reverse)
+    (ret, lineList.reverse)
   }
 }
