@@ -61,6 +61,12 @@ class ScalaGrading(val global: Global) extends Plugin {
         score.copy(vars = score.vars + 1)
       }
 
+      //find whiles
+      case LabelDef(_, _, _) => {
+        info("while")
+        score.copy(whiles = score.whiles + 1)
+      }
+
       case _ => score
     }
   }
