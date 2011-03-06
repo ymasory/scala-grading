@@ -19,6 +19,13 @@ class ScalaGrading(val global: Global) extends Plugin {
     SGDefComponent,
     SGNullComponent
   )
+
+  def report = {
+    "FINAL REPORT" +
+    "Bonus points: " + bonusPoints +
+    "Deductions:   " + pointDeductions + "\n" +
+    "Total: " + (bonusPoints - pointDeductions)
+  }
   
 
   protected abstract class SGAbstractComponent extends PluginComponent {
