@@ -28,7 +28,7 @@ class ScalaGrading(val global: Global) extends Plugin {
     override def newPhase(_prev: Phase) = new SGNullPhase(_prev)
     
     class SGNullPhase(prev: Phase) extends StdPhase(prev) {
-      override def name = ScalaGrading.this.name
+      override def name = getClass.getName
       override def apply(unit: CompilationUnit) {
         for (t @ DefDef(_, name, _, _, _, _) <- unit.body) {
           unit.warning(t.pos, "null def " + name + ", +1")
@@ -46,7 +46,7 @@ class ScalaGrading(val global: Global) extends Plugin {
     override def newPhase(_prev: Phase) = new SGDefPhase(_prev)
     
     class SGDefPhase(prev: Phase) extends StdPhase(prev) {
-      override def name = ScalaGrading.this.name
+      override def name = getClass.getName
       override def apply(unit: CompilationUnit) {
         for (t @ DefDef(_, name, _, _, _, _) <- unit.body) {
           unit.warning(t.pos, "function def " + name + ", +1")
