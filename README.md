@@ -15,6 +15,13 @@ scala-grading is a `scalac` compiler plugin implementing the following [homework
 
 You should now have `target/scala_2.8.1/scala-grading-alpha.jar`.
 
+# Test #
+The testers use `Runtime.exec` with "scalac" as an argument. This may or may not be the same `scalac` you get on the command line or in  your favorite IDE, or in sbt, or whatever. You have been warned.
+
+    sbt
+    trace 2
+    test
+
 # Run #
     cd scala-grading
     scalac -Xplugin:target/scala_2.8.1/scala-grading-alpha.jar test/resources/sample.scala
