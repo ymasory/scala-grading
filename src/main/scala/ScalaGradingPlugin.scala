@@ -56,8 +56,8 @@ class ScalaGrading(val global: Global) extends Plugin {
       }
 
       //find vars
-      case ValDef(_, name, _, _) => {
-        info("var")
+      case tree @ ValDef(_, name, _, _) if (tree.keyword == "var") => {
+        info("var: " + tree.keyword)
         score.copy(vars = score.vars + 1)
       }
 
