@@ -4,7 +4,20 @@ import org.scalatest.FunSuite
 
 class ScalaGradingTests extends FunSuite {
 
-  test("one var") {
+  test("NullFieldLiteral") {
+    expect(Score(defs=0,
+                 lambdas=0,
+                 matches=0,
+                 deceptions=0,
+                 whiles=0,
+                 vars=0,
+                 nulls=1,
+                 arrays=0)) {
+      Score.runPlugin("NullFieldLiteral.scala")
+    }
+  }
+  
+  test("OneVar") {
     expect(Score(defs=0,
                  lambdas=0,
                  matches=0,
@@ -14,6 +27,7 @@ class ScalaGradingTests extends FunSuite {
                  nulls=0,
                  arrays=0)) {
       Score.runPlugin("OneVar.scala")
+      pending
     }
   }
 }

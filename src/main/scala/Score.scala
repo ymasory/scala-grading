@@ -53,18 +53,19 @@ case object Score {
 
   def parse(in: List[String]): Score = {
     var curScore = EmptyScore
+    println(in)
     for (line <- in) {
       val els = line.split("\\s")
-      curScore = els(0) match {
-        case "defs"       => curScore.copy(defs = els.last.toInt)
-        case "lambdas"    => curScore.copy(lambdas = els.last.toInt)
-        case "matches"    => curScore.copy(matches = els.last.toInt)
-        case "deceptions" => curScore.copy(deceptions = els.last.toInt)
-        case "whiles"     => curScore.copy(whiles = els.last.toInt)
-        case "vars"       => curScore.copy(vars = els.last.toInt)
-        case "nulls"      => curScore.copy(nulls = els.last.toInt)
-        case "arrays"     => curScore.copy(arrays = els.last.toInt)
-        case _            => curScore
+      curScore = els.head match {
+        case "defs:"       => curScore.copy(defs = els.last.toInt)
+        case "lambdas:"    => curScore.copy(lambdas = els.last.toInt)
+        case "matches:"    => curScore.copy(matches = els.last.toInt)
+        case "deceptions:" => curScore.copy(deceptions = els.last.toInt)
+        case "whiles:"     => curScore.copy(whiles = els.last.toInt)
+        case "vars:"       => curScore.copy(vars = els.last.toInt)
+        case "nulls:"      => curScore.copy(nulls = els.last.toInt)
+        case "arrays:"     => curScore.copy(arrays = els.last.toInt)
+        case _             => curScore
       }
     }
     curScore
