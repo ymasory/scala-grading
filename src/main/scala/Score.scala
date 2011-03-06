@@ -74,38 +74,43 @@ case object Score {
     val cmd = Array("scalac",
                     "-Xplugin:" + pluginLoc,
                     testPrefix + fileName)
-    val (res, lines) = execp(cmd)
-    parse(lines)
+    val (stdout, stderr, ret) = call(cmd)
+    if (ret != 0) throw ScalacExitCodeException(ret: Int)
+    parse(stdout)
   }
 
   case class ScalacExitCodeException(code: Int) extends RuntimeException(code.toString)
 
-  /** from scala-utilities, LGPL
+  /** borrows from scala-utilities, LGPL
     * http://code.google.com/p/scala-utilities/
     */
-  def execp (cmd : Array[String]) = {
+  def call (cmd : Array[String]) = {
     import java.io._
     val runTime = Runtime.getRuntime
     val process = runTime.exec(cmd)
-    val resultBuffer = new BufferedReader(
-      new InputStreamReader(process.getInputStream))
-    var line : String = null
-    var lineList : List[String] = Nil
-
-
-    do {
-        line = resultBuffer.readLine
+    val stdoutBuffer = new BufferedReader(new InputStreamReader(process.getInputStream))
+    val stderrBuffer = new BufferedReader(new InputStreamReader(process.getErrorStream))
+    
+    def drainBuffer(buff: BufferedReader) = {
+      var line : String = null
+      var lineList : List[String] = Nil
+      do {
+        line = buff.readLine
         if (line != null) {
-            lineList = line :: lineList
+          lineList = line :: lineList
         }
-    } while (line != null)
+      } while (line != null)
+      lineList.reverse
+    }
+
+    val stdout = drainBuffer(stdoutBuffer)
+    val stderr = drainBuffer(stderrBuffer)
 
     process.waitFor
-    resultBuffer.close
+    stdoutBuffer.close()
+    stderrBuffer.close()
     
     val ret = process.exitValue
-    if (ret != 0) throw ScalacExitCodeException(ret: Int)
-
-    (ret, lineList.reverse)
+    (stdout, stderr, ret)
   }
 }
