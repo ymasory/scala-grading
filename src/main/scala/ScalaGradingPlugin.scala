@@ -23,11 +23,13 @@ class ScalaGrading(val global: Global) extends Plugin {
     class SGNullPhase(prev: Phase) extends StdPhase(prev) {
       override def name = ScalaGrading.this.name
       def apply(unit: CompilationUnit) {
+        javax.swing.JOptionPane.showMessageDialog(null, "hai")
+        unit.error(null, "definitely division by zero")
         for ( tree @ Apply(Select(rcvr, nme.DIV),
                            List(Literal(Constant(0)))) <- unit.body;
              if rcvr.tpe <:< definitions.IntClass.tpe) 
           {
-            unit.error(tree.pos, "definitely division by zero")
+
           }
       }
     }

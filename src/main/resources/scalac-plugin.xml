@@ -1,4 +1,4 @@
 <plugin>
-  <name>divbyzero</name>
-  <classname>localhost.DivByZero</classname>
+  <name>scala-grading</name>
+  <classname>com.yuvimasory.scalagrading.ScalaGrading</classname>
 </plugin>
