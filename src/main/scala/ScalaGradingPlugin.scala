@@ -54,7 +54,7 @@ class ScalaGrading(val global: Global) extends Plugin {
           }
         }
 
-        println("\n" + report)
+        println(LF + report)
       }
     }
   }
