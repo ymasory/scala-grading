@@ -6,9 +6,13 @@ import nsc.Phase
 import nsc.plugins.Plugin
 import nsc.plugins.PluginComponent
 
+/** Compiler plugin implementing the homework grading guidelines found at
+  * http://www.cis.upenn.edu/~matuszek/cis700-2010/Assignments/02-Playfair.html
+  */
 class ScalaGrading(val global: Global) extends Plugin {
   import global._
 
+  //things we're looking for in the homeworks
   var numDefs = 0
   var numLambdas = 0
   var numMatches = 0
@@ -17,11 +21,6 @@ class ScalaGrading(val global: Global) extends Plugin {
   var numVars = 0
   var numArrays = 0
   var numNulls = 0
-
-  override val name = "scala-grading"
-  override val description = "grades functional style"
-  
-  override val components = List(ScalaGradingComponnet)
 
   val LF = "\n"
   def report = {
@@ -39,6 +38,7 @@ class ScalaGrading(val global: Global) extends Plugin {
     "-----" + LF + score
   }
 
+  //calculate score using guidelines
   def score = {
     import java.lang.Math.{min, max}
     min(10, numDefs) +
@@ -50,6 +50,10 @@ class ScalaGrading(val global: Global) extends Plugin {
     (numArrays * 5) -
     (numNulls * 10)
   }
+
+  override val name = "scala-grading"
+  override val description = "grades functional style"
+  override val components = List(ScalaGradingComponnet)
   
   object ScalaGradingComponnet extends PluginComponent {
     override val global: ScalaGrading.this.global.type = ScalaGrading.this.global
@@ -60,17 +64,21 @@ class ScalaGrading(val global: Global) extends Plugin {
     class ScalaGradingPhase(prev: Phase) extends StdPhase(prev) {
       override def name = "scala-grading phase"
       override def apply(unit: CompilationUnit) {
+
+        //iterate over every subtree in the body of the compilation unit
         for (tree <- unit.body) {
           def info(msg: String) = global.reporter.info(tree.pos, msg, true)
 
           (tree: @unchecked) match {
 
+            //find defs
             case DefDef(_, name, _, _, _, _) if (name.startsWith("<") == false)
               && (tree.symbol.isSourceMethod)  => {
                 info("function def, +1")
                 numDefs += 1
             }
 
+            //find _literal_ nulls
             case Literal(Constant(null)) => {
               info("null literal, -10")
               numNulls += 1
