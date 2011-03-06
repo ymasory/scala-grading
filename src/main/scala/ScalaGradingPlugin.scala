@@ -57,7 +57,7 @@ class ScalaGrading(val global: Global) extends Plugin {
   
   object ScalaGradingComponnet extends PluginComponent {
     override val global: ScalaGrading.this.global.type = ScalaGrading.this.global
-    override val runsAfter = List[String]("refchecks");
+    override val runsAfter = List[String]("parser");
     override val phaseName = "scala-grading component"
     override def newPhase(_prev: Phase) = new ScalaGradingPhase(_prev)
     
@@ -69,7 +69,7 @@ class ScalaGrading(val global: Global) extends Plugin {
         for (tree <- unit.body) {
           def info(msg: String) = global.reporter.info(tree.pos, msg, true)
 
-          (tree: @unchecked) match {
+          tree match {
 
             //find defs
             case DefDef(_, name, _, _, _, _) if (name.startsWith("<") == false)
