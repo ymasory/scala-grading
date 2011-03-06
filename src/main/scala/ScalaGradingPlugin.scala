@@ -53,8 +53,12 @@ class ScalaGrading(val global: Global) extends Plugin {
     class SGDefPhase(prev: Phase) extends StdPhase(prev) {
       override def name = getClass.getName.split("\\$").last
       override def apply(unit: CompilationUnit) {
-        for (t @ DefDef(_, name, _, _, _, _) <- unit.body) {
-
+        for {t @ DefDef(_, name, _, _, _, _) <- unit.body
+             if name.startsWith("<") == false
+             if t.symbol.isSourceMethod
+           } {
+          global.reporter.info(t.pos, "function def, +1", true)
+          bonusPoints += 1
         }
       }
     }
