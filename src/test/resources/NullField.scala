@@ -1,3 +1,3 @@
-object Test {
+object NullField {
   val five = null
 }
