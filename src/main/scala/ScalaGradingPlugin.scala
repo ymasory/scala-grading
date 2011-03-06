@@ -19,6 +19,7 @@ class ScalaGrading(val global: Global) extends Plugin {
   object ScalaGradingComponnet extends PluginComponent {
     override val global: ScalaGrading.this.global.type = ScalaGrading.this.global
     override val runsAfter = List[String]("parser");
+    override val runsRightAfter = Some("parser");
     override val phaseName = "scala-grading component"
     override def newPhase(_prev: Phase) = new ScalaGradingPhase(_prev)
     
@@ -39,31 +40,30 @@ class ScalaGrading(val global: Global) extends Plugin {
   def analyzeTree(tree: Tree, score: Score): Score = {
     def info(msg: String) = global.reporter.info(tree.pos, msg, true)
     
-    if (tree.symbol == null || tree.symbol.isSynthetic) score
-    else {
-      tree match {
+    tree match {
       
-        //find defs
-        case DefDef(_, name, _, _, _, _) if (name.startsWith("<") == false)
-          && (tree.symbol.isSourceMethod) => {
-            info("function def")
-            score.copy(defs = score.defs + 1)
-        }
-
-        //find _literal_ nulls
-        case Literal(Constant(null)) => {
-          info("null literal")
-          score.copy(nulls = score.nulls + 1)
-        }
-
-        //find vars
-        case ValDef(_, name, _, _) if (name.toString.contains("$") == false) => {
-          info("var")
-          score.copy(vars = score.vars + 1)
-        }
-
-        case _ => score
+      //find defs
+      case DefDef(_, name, _, _, _, _) if (name.startsWith("<") == false)
+        && (tree.symbol.isSourceMethod) => {
+          println("MATCH")
+          println(tree)
+          info("function def")
+          score.copy(defs = score.defs + 1)
       }
+
+      //find _literal_ nulls
+      case Literal(Constant(null)) => {
+        info("null literal")
+        score.copy(nulls = score.nulls + 1)
+      }
+
+      // //find vars
+      // case ValDef(_, name, _, _) => {
+      //   info("var")
+      //   score.copy(vars = score.vars + 1)
+      // }
+
+      case _ => score
     }
   }
 }
