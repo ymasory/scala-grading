@@ -27,8 +27,7 @@ class ScalaGrading(val global: Global) extends Plugin {
       override def apply(unit: CompilationUnit) {
 
         //iterate over every subtree in the body of the compilation unit
-        val emptyScore = Score(0, 0, 0, 0, 0, 0, 0, 0)
-        var curScore = emptyScore
+        var curScore = Score.EmptyScore
         for (tree <- unit.body) {
           curScore = analyzeTree(tree, curScore)
         }
