@@ -9,13 +9,13 @@ import nsc.plugins.PluginComponent
 class ScalaGrading(val global: Global) extends Plugin {
   import global._
 
-  val name = "scala-grading"
-  val description = "grades functional style"
-
   var bonusPoints = 0
   var pointDeductions = 0
+
+  override val name = "scala-grading"
+  override val description = "grades functional style"
   
-  val components = List[PluginComponent] (
+  override val components = List[PluginComponent] (
     SGDefComponent,
     SGNullComponent
   )
