@@ -13,11 +13,11 @@
 2. `cd scala-grading`
 3. `sbt package`
 
-You should now have `target/scala_2.8.1/scala-grading-*.jar`.
+You should now have `target/scala_2.8.1/scala-grading-alpha.jar`.
 
 # Run #
     cd scala-grading
-    scalac -Xplugin:target/scala_2.8.1/scala-grading-*.jar test/resources/sample.scala
+    scalac -Xplugin:target/scala_2.8.1/scala-grading-alpha.jar test/resources/sample.scala
 
 Alternatively, you can put the jar in `$SCALA_HOME/misc/scala-devel/plugins` and it will always be used, without any special arguments to `scalac`.
 
