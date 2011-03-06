@@ -45,8 +45,6 @@ class ScalaGrading(val global: Global) extends Plugin {
       //find defs
       case DefDef(_, name, _, _, _, _) if (name.startsWith("<") == false)
         && (tree.symbol.isSourceMethod) => {
-          println("MATCH")
-          println(tree)
           info("function def")
           score.copy(defs = score.defs + 1)
       }
@@ -57,11 +55,11 @@ class ScalaGrading(val global: Global) extends Plugin {
         score.copy(nulls = score.nulls + 1)
       }
 
-      // //find vars
-      // case ValDef(_, name, _, _) => {
-      //   info("var")
-      //   score.copy(vars = score.vars + 1)
-      // }
+      //find vars
+      case ValDef(_, name, _, _) => {
+        info("var")
+        score.copy(vars = score.vars + 1)
+      }
 
       case _ => score
     }

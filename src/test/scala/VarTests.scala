@@ -13,6 +13,18 @@ class VarTests extends FunSuite {
                          vars=1,
                          arrays=0,
                          nulls=0)
-    expect(expected) {Score.runPlugin("VarField.scala")}
+    expect(expected) {Score.runPlugin("vars/VarField.scala")}
+  }
+
+  test("ValField") {
+    val expected = Score(defs=0,
+                         lambdas=0,
+                         matches=0,
+                         deceptions=0,
+                         whiles=0,
+                         vars=0,
+                         arrays=0,
+                         nulls=0)
+    expect(expected) {Score.runPlugin("vars/ValField.scala")}
   }
 }
