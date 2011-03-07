@@ -73,6 +73,12 @@ class ScalaGrading(val global: Global) extends Plugin {
         score.copy(matches = score.matches + 1)
       }
 
+      //find lambdas
+      case Function(_, _) => {
+        info("lambda")
+        score.copy(lambdas = score.lambdas + 1)
+      }
+
       case _ => score
     }
   }
