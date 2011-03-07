@@ -24,7 +24,7 @@ The testers use `Runtime.exec` with "scalac" as an argument. This may or may not
 
 # Run #
     cd scala-grading
-    scalac -Xplugin:target/scala_2.8.1/scala-grading-alpha.jar test/resources/sample.scala
+    scalac -Xplugin:target/scala_2.8.1/scala-grading-alpha.jar src/test/resources/Playfair.scala
 
 Alternatively, you can put the jar in `$SCALA_HOME/misc/scala-devel/plugins` and it will always be used, without any special arguments to `scalac`.
 
