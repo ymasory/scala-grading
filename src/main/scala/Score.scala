@@ -72,6 +72,7 @@ case object Score {
 
   def runPlugin(fileName: String): Score = {
     val cmd = Array("scalac",
+                    "-d",  "target",
                     "-Xplugin:" + pluginLoc,
                     testPrefix + fileName)
     val (stdout, stderr, ret) = call(cmd)
